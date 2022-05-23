@@ -400,7 +400,7 @@ func TestCITests(t *testing.T) {
 		want     checker.CheckResult
 		status   string
 		wantErr  bool
-		commit   []clients.Commit
+		commit   []clients.MergeCommit
 		r        []clients.CheckRun
 		expected scut.TestReturn
 	}{
@@ -409,9 +409,11 @@ func TestCITests(t *testing.T) {
 			expected: scut.TestReturn{
 				NumberOfDebug: 1,
 			},
-			commit: []clients.Commit{
+			commit: []clients.MergeCommit{
 				{
-					SHA: "sha",
+					Commit: clients.Commit{
+						SHA: "sha",
+					},
 					AssociatedMergeRequest: clients.PullRequest{
 						HeadSHA: "sha",
 						Number:  1,
@@ -430,9 +432,11 @@ func TestCITests(t *testing.T) {
 			expected: scut.TestReturn{
 				Score: -1,
 			},
-			commit: []clients.Commit{
+			commit: []clients.MergeCommit{
 				{
-					SHA: "sha",
+					Commit: clients.Commit{
+						SHA: "sha",
+					},
 					AssociatedMergeRequest: clients.PullRequest{
 						HeadSHA: "sha",
 						Number:  1,

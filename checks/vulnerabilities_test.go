@@ -48,11 +48,17 @@ func TestVulnerabilities(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			mockRepo := mockrepo.NewMockRepoClient(ctrl)
 
-			mockRepo.EXPECT().ListCommits().DoAndReturn(func() ([]clients.Commit, error) {
+			mockRepo.EXPECT().ListCommits().DoAndReturn(func() ([]clients.MergeCommit, error) {
 				if tt.err != nil {
 					return nil, tt.err
 				}
-				return []clients.Commit{{SHA: "test"}}, nil
+				return []clients.MergeCommit{
+					{
+						Commit: clients.Commit{
+							SHA: "test",
+						},
+					},
+				}, nil
 			}).MinTimes(1)
 
 			mockVulnClient := mockrepo.NewMockVulnerabilitiesClient(ctrl)

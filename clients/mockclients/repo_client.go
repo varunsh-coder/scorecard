@@ -153,10 +153,10 @@ func (mr *MockRepoClientMockRecorder) ListCheckRunsForRef(ref interface{}) *gomo
 }
 
 // ListCommits mocks base method.
-func (m *MockRepoClient) ListCommits() ([]clients.Commit, error) {
+func (m *MockRepoClient) ListCommits() ([]clients.MergeCommit, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListCommits")
-	ret0, _ := ret[0].([]clients.Commit)
+	ret0, _ := ret[0].([]clients.MergeCommit)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

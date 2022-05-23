@@ -51,7 +51,7 @@ func Test_Maintained(t *testing.T) {
 		name       string
 		isarchived bool
 		archiveerr error
-		commits    []clients.Commit
+		commits    []clients.MergeCommit
 		commiterr  error
 		issues     []clients.Issue
 		issueerr   error
@@ -75,7 +75,7 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "commit lookup error",
 			isarchived: false,
-			commits:    []clients.Commit{},
+			commits:    []clients.MergeCommit{},
 			commiterr:  errors.New("error"),
 			issues:     []clients.Issue{},
 			expected: checker.CheckResult{
@@ -94,7 +94,7 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "repo with no commits or issues",
 			isarchived: false,
-			commits:    []clients.Commit{},
+			commits:    []clients.MergeCommit{},
 			issues:     []clients.Issue{},
 			expected: checker.CheckResult{
 				Score: 0,
@@ -103,18 +103,26 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "repo with valid commits",
 			isarchived: false,
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					CommittedDate: time.Now().AddDate(0, 0, -1),
+					Commit: clients.Commit{
+						CommittedDate: time.Now().AddDate(0, 0, -1),
+					},
 				},
 				{
-					CommittedDate: time.Now().AddDate(0, 0, -10),
+					Commit: clients.Commit{
+						CommittedDate: time.Now().AddDate(0, 0, -10),
+					},
 				},
 				{
-					CommittedDate: time.Now().AddDate(0, 0, -11),
+					Commit: clients.Commit{
+						CommittedDate: time.Now().AddDate(0, 0, -11),
+					},
 				},
 				{
-					CommittedDate: time.Now().AddDate(0, 0, -12),
+					Commit: clients.Commit{
+						CommittedDate: time.Now().AddDate(0, 0, -12),
+					},
 				},
 			},
 			issues: []clients.Issue{},
@@ -125,7 +133,7 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "old issues, no comments",
 			isarchived: false,
-			commits:    []clients.Commit{},
+			commits:    []clients.MergeCommit{},
 			issues: []clients.Issue{
 				{
 					CreatedAt:         &threeHundredDaysAgo,
@@ -145,7 +153,7 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "new issues by non-associated users",
 			isarchived: false,
-			commits:    []clients.Commit{},
+			commits:    []clients.MergeCommit{},
 			issues: []clients.Issue{
 				{
 					CreatedAt:         &fiveDaysAgo,
@@ -165,7 +173,7 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "new issues with comments by non-associated users",
 			isarchived: false,
-			commits:    []clients.Commit{},
+			commits:    []clients.MergeCommit{},
 			issues: []clients.Issue{
 				{
 					CreatedAt:         &fiveDaysAgo,
@@ -197,7 +205,7 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "old issues with old comments by owner",
 			isarchived: false,
-			commits:    []clients.Commit{},
+			commits:    []clients.MergeCommit{},
 			issues: []clients.Issue{
 				{
 					CreatedAt:         &twoHundredDaysAgo,
@@ -229,7 +237,7 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "old issues with new comments by owner",
 			isarchived: false,
-			commits:    []clients.Commit{},
+			commits:    []clients.MergeCommit{},
 			issues: []clients.Issue{
 				{
 					CreatedAt:         &twoHundredDaysAgo,
@@ -261,7 +269,7 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "new issues by owner",
 			isarchived: false,
-			commits:    []clients.Commit{},
+			commits:    []clients.MergeCommit{},
 			issues: []clients.Issue{
 				{
 					CreatedAt:         &fiveDaysAgo,
@@ -281,7 +289,7 @@ func Test_Maintained(t *testing.T) {
 		{
 			name:       "new issues by non-owner",
 			isarchived: false,
-			commits:    []clients.Commit{},
+			commits:    []clients.MergeCommit{},
 			issues: []clients.Issue{
 				{
 					CreatedAt:         &fiveDaysAgo,
@@ -318,7 +326,7 @@ func Test_Maintained(t *testing.T) {
 
 			if tt.archiveerr == nil {
 				mockRepo.EXPECT().ListCommits().DoAndReturn(
-					func() ([]clients.Commit, error) {
+					func() ([]clients.MergeCommit, error) {
 						if tt.commiterr != nil {
 							return nil, tt.commiterr
 						}

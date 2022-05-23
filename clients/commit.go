@@ -16,11 +16,16 @@ package clients
 
 import "time"
 
+// MergeCommit represents the commit used to merge a PR into the repo.
+type MergeCommit struct {
+	Commit                 Commit
+	AssociatedMergeRequest PullRequest
+}
+
 // Commit represents a Git commit.
 type Commit struct {
-	CommittedDate          time.Time
-	Message                string
-	SHA                    string
-	Committer              User
-	AssociatedMergeRequest PullRequest
+	CommittedDate time.Time
+	Message       string
+	SHA           string
+	Committer     User
 }

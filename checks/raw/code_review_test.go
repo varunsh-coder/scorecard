@@ -195,7 +195,7 @@ func Test_mergeRequest(t *testing.T) {
 func Test_getRawDataFromCommit(t *testing.T) {
 	t.Parallel()
 	type args struct {
-		c *clients.Commit
+		c *clients.MergeCommit
 	}
 	tests := []struct {
 		name string
@@ -205,10 +205,12 @@ func Test_getRawDataFromCommit(t *testing.T) {
 		{
 			name: "Test_getRawDataFromCommit",
 			args: args{
-				c: &clients.Commit{
-					CommittedDate: time.Time{},
-					Message:       "message",
-					SHA:           "sha",
+				c: &clients.MergeCommit{
+					Commit: clients.Commit{
+						CommittedDate: time.Time{},
+						Message:       "message",
+						SHA:           "sha",
+					},
 				},
 			},
 			want: checker.DefaultBranchCommit{
@@ -257,14 +259,16 @@ func TestCodeReview(t *testing.T) {
 			t.Parallel()
 			ctrl := gomock.NewController(t)
 			mr := mockrepo.NewMockRepoClient(ctrl)
-			mr.EXPECT().ListCommits().DoAndReturn(func() ([]*clients.Commit, error) {
+			mr.EXPECT().ListCommits().DoAndReturn(func() ([]*clients.MergeCommit, error) {
 				if tt.wantErr {
 					//nolint
 					return nil, errors.New("error")
 				}
-				return []*clients.Commit{
+				return []*clients.MergeCommit{
 					{
-						SHA: "sha",
+						Commit: clients.Commit{
+							SHA: "sha",
+						},
 					},
 				}, nil
 			})

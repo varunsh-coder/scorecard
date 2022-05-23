@@ -32,7 +32,7 @@ func Vulnerabilities(c *checker.CheckRequest) (checker.VulnerabilitiesData, erro
 		return checker.VulnerabilitiesData{}, nil
 	}
 
-	resp, err := c.VulnerabilitiesClient.HasUnfixedVulnerabilities(c.Ctx, commits[0].SHA)
+	resp, err := c.VulnerabilitiesClient.HasUnfixedVulnerabilities(c.Ctx, commits[0].Commit.SHA)
 	if err != nil {
 		return checker.VulnerabilitiesData{}, fmt.Errorf("vulnerabilitiesClient.HasUnfixedVulnerabilities: %w", err)
 	}
@@ -49,13 +49,13 @@ func Vulnerabilities(c *checker.CheckRequest) (checker.VulnerabilitiesData, erro
 	return checker.VulnerabilitiesData{Vulnerabilities: vulns}, nil
 }
 
-type predicateOnCommitFn func(clients.Commit) bool
+type predicateOnCommitFn func(clients.MergeCommit) bool
 
-var hasEmptySHA predicateOnCommitFn = func(c clients.Commit) bool {
-	return c.SHA == ""
+var hasEmptySHA predicateOnCommitFn = func(c clients.MergeCommit) bool {
+	return c.Commit.SHA == ""
 }
 
-func allOf(commits []clients.Commit, predicate func(clients.Commit) bool) bool {
+func allOf(commits []clients.MergeCommit, predicate predicateOnCommitFn) bool {
 	for i := range commits {
 		if !predicate(commits[i]) {
 			return false

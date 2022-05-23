@@ -36,7 +36,7 @@ func TestCodereview(t *testing.T) {
 		err       error
 		name      string
 		commiterr error
-		commits   []clients.Commit
+		commits   []clients.MergeCommit
 		expected  checker.CheckResult
 	}{
 		{
@@ -69,11 +69,13 @@ func TestCodereview(t *testing.T) {
 		},
 		{
 			name: "Valid GitHub PR",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					SHA: "sha",
-					Committer: clients.User{
-						Login: "user",
+					Commit: clients.Commit{
+						SHA: "sha",
+						Committer: clients.User{
+							Login: "user",
+						},
 					},
 					AssociatedMergeRequest: clients.PullRequest{
 						Number:   1,
@@ -92,11 +94,13 @@ func TestCodereview(t *testing.T) {
 		},
 		{
 			name: "Valid Prow PR as not a bot",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					SHA: "sha",
-					Committer: clients.User{
-						Login: "user",
+					Commit: clients.Commit{
+						SHA: "sha",
+						Committer: clients.User{
+							Login: "user",
+						},
 					},
 					AssociatedMergeRequest: clients.PullRequest{
 						Number:   1,
@@ -115,11 +119,13 @@ func TestCodereview(t *testing.T) {
 		},
 		{
 			name: "Valid Prow PR and commits as bot",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					SHA: "sha",
-					Committer: clients.User{
-						Login: "bot",
+					Commit: clients.Commit{
+						SHA: "sha",
+						Committer: clients.User{
+							Login: "bot",
+						},
 					},
 					AssociatedMergeRequest: clients.PullRequest{
 						Number:   1,
@@ -138,11 +144,13 @@ func TestCodereview(t *testing.T) {
 		},
 		{
 			name: "Valid PR's and commits with merged by someone else",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					SHA: "sha",
-					Committer: clients.User{
-						Login: "bob",
+					Commit: clients.Commit{
+						SHA: "sha",
+						Committer: clients.User{
+							Login: "bob",
+						},
 					},
 					AssociatedMergeRequest: clients.PullRequest{
 						Number: 1,
@@ -160,11 +168,13 @@ func TestCodereview(t *testing.T) {
 		},
 		{
 			name: "2 PRs 2 review on GitHub",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					SHA: "sha",
-					Committer: clients.User{
-						Login: "bob",
+					Commit: clients.Commit{
+						SHA: "sha",
+						Committer: clients.User{
+							Login: "bob",
+						},
 					},
 					AssociatedMergeRequest: clients.PullRequest{
 						Number:   1,
@@ -177,9 +187,11 @@ func TestCodereview(t *testing.T) {
 					},
 				},
 				{
-					SHA: "sha2",
-					Committer: clients.User{
-						Login: "bob",
+					Commit: clients.Commit{
+						SHA: "sha2",
+						Committer: clients.User{
+							Login: "bob",
+						},
 					},
 				},
 			},
@@ -189,13 +201,15 @@ func TestCodereview(t *testing.T) {
 		},
 		{
 			name: "Valid Phabricator commit",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					SHA: "sha",
-					Committer: clients.User{
-						Login: "bob",
+					Commit: clients.Commit{
+						SHA: "sha",
+						Committer: clients.User{
+							Login: "bob",
+						},
+						Message: "Title\nReviewed By: alice\nDifferential Revision: PHAB234",
 					},
-					Message: "Title\nReviewed By: alice\nDifferential Revision: PHAB234",
 				},
 			},
 			expected: checker.CheckResult{
@@ -204,13 +218,15 @@ func TestCodereview(t *testing.T) {
 		},
 		{
 			name: "Phabricator like, missing differential",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					SHA: "sha",
-					Committer: clients.User{
-						Login: "bob",
+					Commit: clients.Commit{
+						SHA: "sha",
+						Committer: clients.User{
+							Login: "bob",
+						},
+						Message: "Title\nReviewed By: alice",
 					},
-					Message: "Title\nReviewed By: alice",
 				},
 			},
 			expected: checker.CheckResult{
@@ -219,13 +235,15 @@ func TestCodereview(t *testing.T) {
 		},
 		{
 			name: "Phabricator like, missing reviewed by",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					SHA: "sha",
-					Committer: clients.User{
-						Login: "bob",
+					Commit: clients.Commit{
+						SHA: "sha",
+						Committer: clients.User{
+							Login: "bob",
+						},
+						Message: "Title\nDifferential Revision: PHAB234",
 					},
-					Message: "Title\nDifferential Revision: PHAB234",
 				},
 			},
 			expected: checker.CheckResult{
@@ -234,13 +252,15 @@ func TestCodereview(t *testing.T) {
 		},
 		{
 			name: "Valid piper commit",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
-					SHA: "sha",
-					Committer: clients.User{
-						Login: "",
+					Commit: clients.Commit{
+						SHA: "sha",
+						Committer: clients.User{
+							Login: "",
+						},
+						Message: "Title\nPiperOrigin-RevId: 444529962",
 					},
-					Message: "Title\nPiperOrigin-RevId: 444529962",
 				},
 			},
 			expected: checker.CheckResult{

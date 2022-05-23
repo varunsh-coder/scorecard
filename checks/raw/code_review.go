@@ -38,14 +38,15 @@ func CodeReview(c clients.RepoClient) (checker.CodeReviewData, error) {
 	return checker.CodeReviewData{DefaultBranchCommits: results}, nil
 }
 
-func getRawDataFromCommit(c *clients.Commit) checker.DefaultBranchCommit {
+func getRawDataFromCommit(c *clients.MergeCommit) checker.DefaultBranchCommit {
+	commit := c.Commit
 	r := checker.DefaultBranchCommit{
 		Committer: checker.User{
-			Login: c.Committer.Login,
+			Login: commit.Committer.Login,
 		},
-		SHA:           c.SHA,
-		CommitMessage: c.Message,
-		CommitDate:    &c.CommittedDate,
+		SHA:           commit.SHA,
+		CommitMessage: commit.Message,
+		CommitDate:    &commit.CommittedDate,
 		MergeRequest:  mergeRequest(&c.AssociatedMergeRequest),
 	}
 

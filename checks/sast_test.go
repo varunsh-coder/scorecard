@@ -34,7 +34,7 @@ func TestSAST(t *testing.T) {
 	// nolint: govet, goerr113
 	tests := []struct {
 		name          string
-		commits       []clients.Commit
+		commits       []clients.MergeCommit
 		err           error
 		searchresult  clients.SearchResponse
 		checkRuns     []clients.CheckRun
@@ -43,21 +43,21 @@ func TestSAST(t *testing.T) {
 	}{
 		{
 			name:         "SAST checker should return failed status when no PRs are found",
-			commits:      []clients.Commit{},
+			commits:      []clients.MergeCommit{},
 			searchresult: clients.SearchResponse{},
 			checkRuns:    []clients.CheckRun{},
 		},
 		{
 			name:         "SAST checker should return failed status when no PRs are found",
 			err:          errors.New("error"),
-			commits:      []clients.Commit{},
+			commits:      []clients.MergeCommit{},
 			searchresult: clients.SearchResponse{},
 			checkRuns:    []clients.CheckRun{},
 			expected:     checker.CheckResult{Score: -1},
 		},
 		{
 			name: "Successful SAST checker should return success status",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
 					AssociatedMergeRequest: clients.PullRequest{
 						MergedAt: time.Now().Add(time.Hour - 1),
@@ -80,7 +80,7 @@ func TestSAST(t *testing.T) {
 		},
 		{
 			name: "Failed SAST checker should return success status",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
 					AssociatedMergeRequest: clients.PullRequest{
 						MergedAt: time.Now().Add(time.Hour - 1),
@@ -119,7 +119,7 @@ func TestSAST(t *testing.T) {
 		},
 		{
 			name: "Failed SAST checker with checkRuns not completed",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
 					AssociatedMergeRequest: clients.PullRequest{
 						MergedAt: time.Now().Add(time.Hour - 1),
@@ -155,7 +155,7 @@ func TestSAST(t *testing.T) {
 		},
 		{
 			name: "Failed SAST with PullRequest not merged",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
 					AssociatedMergeRequest: clients.PullRequest{
 						Number: 1,
@@ -176,7 +176,7 @@ func TestSAST(t *testing.T) {
 		},
 		{
 			name: "Merged PullRequest in a different repo",
-			commits: []clients.Commit{
+			commits: []clients.MergeCommit{
 				{
 					AssociatedMergeRequest: clients.PullRequest{
 						MergedAt: time.Now(),
@@ -207,7 +207,7 @@ func TestSAST(t *testing.T) {
 			t.Parallel()
 			ctrl := gomock.NewController(t)
 			mockRepoClient := mockrepo.NewMockRepoClient(ctrl)
-			mockRepoClient.EXPECT().ListCommits().DoAndReturn(func() ([]clients.Commit, error) {
+			mockRepoClient.EXPECT().ListCommits().DoAndReturn(func() ([]clients.MergeCommit, error) {
 				if tt.err != nil {
 					return nil, tt.err
 				}

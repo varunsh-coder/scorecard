@@ -72,7 +72,7 @@ func getRepoCommitHash(r clients.RepoClient) (string, error) {
 	}
 
 	if len(commits) > 0 {
-		return commits[0].SHA, nil
+		return commits[0].Commit.SHA, nil
 	}
 	return "no commits found", nil
 }

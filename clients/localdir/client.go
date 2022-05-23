@@ -167,7 +167,7 @@ func (client *localDirClient) GetDefaultBranch() (*clients.BranchRef, error) {
 }
 
 // ListCommits implements RepoClient.ListCommits.
-func (client *localDirClient) ListCommits() ([]clients.Commit, error) {
+func (client *localDirClient) ListCommits() ([]clients.MergeCommit, error) {
 	return nil, fmt.Errorf("ListCommits: %w", clients.ErrUnsupportedFeature)
 }
 

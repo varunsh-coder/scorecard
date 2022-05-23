@@ -128,7 +128,7 @@ type graphqlHandler struct {
 	ctx      context.Context
 	errSetup error
 	repourl  *repoURL
-	commits  []clients.Commit
+	commits  []clients.MergeCommit
 	issues   []clients.Issue
 	archived bool
 }
@@ -174,7 +174,7 @@ func (handler *graphqlHandler) setup() error {
 	return handler.errSetup
 }
 
-func (handler *graphqlHandler) getCommits() ([]clients.Commit, error) {
+func (handler *graphqlHandler) getCommits() ([]clients.MergeCommit, error) {
 	if err := handler.setup(); err != nil {
 		return nil, fmt.Errorf("error during graphqlHandler.setup: %w", err)
 	}
@@ -202,8 +202,8 @@ func (handler *graphqlHandler) isArchived() (bool, error) {
 }
 
 //nolint
-func commitsFrom(data *graphqlData, repoOwner, repoName string) ([]clients.Commit, error) {
-	ret := make([]clients.Commit, 0)
+func commitsFrom(data *graphqlData, repoOwner, repoName string) ([]clients.MergeCommit, error) {
+	ret := make([]clients.MergeCommit, 0)
 	for _, commit := range data.Repository.Object.Commit.History.Nodes {
 		var committer string
 		// Find the commit's committer.
@@ -251,12 +251,14 @@ func commitsFrom(data *graphqlData, repoOwner, repoName string) ([]clients.Commi
 			}
 			break
 		}
-		ret = append(ret, clients.Commit{
-			CommittedDate: commit.CommittedDate.Time,
-			Message:       string(commit.Message),
-			SHA:           string(commit.Oid),
-			Committer: clients.User{
-				Login: committer,
+		ret = append(ret, clients.MergeCommit{
+			Commit: clients.Commit{
+				CommittedDate: commit.CommittedDate.Time,
+				Message:       string(commit.Message),
+				SHA:           string(commit.Oid),
+				Committer: clients.User{
+					Login: committer,
+				},
 			},
 			AssociatedMergeRequest: associatedPR,
 		})
