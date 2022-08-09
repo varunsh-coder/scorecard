@@ -39,7 +39,7 @@ var (
 	workflowText = "update your workflow using https://app.stepsecurity.io/secureworkflow/%s/%s/%s?enable=%s"
 	//nolint
 	workflowMarkdown  = "update your workflow using [https://app.stepsecurity.io](https://app.stepsecurity.io/secureworkflow/%s/%s/%s?enable=%s)"
-	dockerfilePinText = "pin your Docker image by updating %[1]s to %[1]s@%s"
+	dockerfilePinText = "pin your Docker image by updating %[1]s to %[1]s@%s. View diff using https://app.stepsecurity.io/secure-dockerfile/%s/%s/%s"
 )
 
 //nolint:gochecknoinits
@@ -110,7 +110,7 @@ func CreateDockerfilePinningRemediation(name *string) *checker.Remediation {
 		return nil
 	}
 
-	text := fmt.Sprintf(dockerfilePinText, *name, hash)
+	text := fmt.Sprintf(dockerfilePinText, *name, hash, repo, "Dockerfile", branch)
 	markdown := text
 
 	return &checker.Remediation{
