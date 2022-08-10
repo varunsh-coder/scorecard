@@ -141,7 +141,7 @@ func (handler *branchesHandler) setup() error {
 		}
 		handler.data = new(defaultBranchData)
 		if err := handler.graphClient.Query(handler.ctx, handler.data, vars); err != nil {
-			handler.errSetup = sce.WithMessage(sce.ErrScorecardInternal, fmt.Sprintf("githubv4.Query: %v", err))
+			handler.errSetup = sce.WithMessage(sce.ErrScorecardInternal, fmt.Sprintf("githubv4.Query: %v, vars: %v", err, vars))
 			return
 		}
 		handler.defaultBranchRef = getBranchRefFrom(handler.data.Repository.DefaultBranchRef)
