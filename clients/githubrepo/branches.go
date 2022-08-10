@@ -128,6 +128,20 @@ func (handler *branchesHandler) init(ctx context.Context, repourl *repoURL) {
 	handler.errSetup = nil
 	handler.once = new(sync.Once)
 }
+func (handler *branchesHandler) getRemainingLimit() error {
+	var limitQuery struct {
+		RateLimit struct {
+			Remaining githubv4.Int
+		}
+	}
+
+	if err := handler.graphClient.Query(handler.ctx, &limitQuery, nil); err != nil {
+		fmt.Println("    Remaining err:", err)
+		return err
+	}
+	fmt.Println("    Remaining:", limitQuery.RateLimit.Remaining)
+	return nil
+}
 
 func (handler *branchesHandler) setup() error {
 	handler.once.Do(func() {
@@ -139,6 +153,7 @@ func (handler *branchesHandler) setup() error {
 			"owner": githubv4.String(handler.repourl.owner),
 			"name":  githubv4.String(handler.repourl.repo),
 		}
+		handler.getRemainingLimit()
 		handler.data = new(defaultBranchData)
 		if err := handler.graphClient.Query(handler.ctx, handler.data, vars); err != nil {
 			handler.errSetup = sce.WithMessage(sce.ErrScorecardInternal, fmt.Sprintf("githubv4.Query: %v, vars: %v", err, vars))
