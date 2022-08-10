@@ -155,6 +155,11 @@ func (client *Client) GetDefaultBranch() (*clients.BranchRef, error) {
 	return client.branches.getDefaultBranch()
 }
 
+// GetDefaultBranch implements RepoClient.GetDefaultBranch.
+func (client *Client) GetDefaultBranchName() (*string, error) {
+	return client.repo.DefaultBranch, nil
+}
+
 // GetBranch implements RepoClient.GetBranch.
 func (client *Client) GetBranch(branch string) (*clients.BranchRef, error) {
 	return client.branches.getBranch(branch)

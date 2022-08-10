@@ -153,15 +153,15 @@ func (handler *branchesHandler) setup() error {
 			"owner": githubv4.String(handler.repourl.owner),
 			"name":  githubv4.String(handler.repourl.repo),
 		}
-		handler.getRemainingLimit()
+
 		handler.data = new(defaultBranchData)
 		if err := handler.graphClient.Query(handler.ctx, handler.data, vars); err != nil {
 			handler.errSetup = sce.WithMessage(sce.ErrScorecardInternal, fmt.Sprintf("githubv4.Query: %v, vars: %v", err, vars))
-			fmt.Println("    Cost:", *handler.data.RateLimit.Cost)
+
 			return
 		}
 		handler.defaultBranchRef = getBranchRefFrom(handler.data.Repository.DefaultBranchRef)
-		fmt.Println("    Cost:", *handler.data.RateLimit.Cost)
+
 	})
 	return handler.errSetup
 }

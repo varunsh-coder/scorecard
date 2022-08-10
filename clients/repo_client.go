@@ -34,6 +34,7 @@ type RepoClient interface {
 	GetFileContent(filename string) ([]byte, error)
 	GetBranch(branch string) (*BranchRef, error)
 	GetDefaultBranch() (*BranchRef, error)
+	GetDefaultBranchName() (*string, error)
 	ListCommits() ([]Commit, error)
 	ListIssues() ([]Issue, error)
 	ListReleases() ([]Release, error)
